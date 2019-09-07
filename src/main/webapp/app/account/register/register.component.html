@@ -112,6 +112,10 @@
                         </small>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LebOLcUAAAAAFaVApopcYxLMF1sZtleCGlEDGjE"></div>
+                    <div *ngIf="captchaError" class="error">Recaptcha not verified.</div>
+                </div>
 
                 <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">Register</button>
             </form>

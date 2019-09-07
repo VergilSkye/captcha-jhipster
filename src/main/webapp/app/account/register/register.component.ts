@@ -7,6 +7,8 @@ import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared';
 import { LoginModalService } from 'app/core';
 import { Register } from './register.service';
 
+declare var grecaptcha: any;
+
 @Component({
   selector: 'jhi-register',
   templateUrl: './register.component.html'
@@ -18,6 +20,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   errorUserExists: string;
   success: boolean;
   modalRef: NgbModalRef;
+  captchaError: boolean = false;
 
   registerForm = this.fb.group({
     login: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[_.@A-Za-z0-9-]*$')]],
@@ -43,14 +46,21 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   register() {
+    const responseCaptca = grecaptcha.getResponse();
+    if (responseCaptca.length === 0) {
+      this.captchaError = true;
+      return;
+    }
     let registerAccount = {};
     const login = this.registerForm.get(['login']).value;
     const email = this.registerForm.get(['email']).value;
     const password = this.registerForm.get(['password']).value;
+    const recaptchaResponse = responseCaptca + 'asasa';
+    console.log(responseCaptca);
     if (password !== this.registerForm.get(['confirmPassword']).value) {
       this.doNotMatch = 'ERROR';
     } else {
-      registerAccount = { ...registerAccount, login, email, password };
+      registerAccount = { ...registerAccount, login, email, password, recaptchaResponse };
       this.doNotMatch = null;
       this.error = null;
       this.errorUserExists = null;

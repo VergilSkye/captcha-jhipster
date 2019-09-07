@@ -149,4 +149,8 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  recaptcha:
+    site: 6LebOLcUAAAAAFaVApopcYxLMF1sZtleCGlEDGjE
+    secret: 6LebOLcUAAAAAMVqx31SSkDVshPZ4g6am5f93Ac-
+    verify: https://www.google.com/recaptcha/api/siteverify

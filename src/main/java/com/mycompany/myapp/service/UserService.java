@@ -42,12 +42,14 @@ public class UserService {
     private final AuthorityRepository authorityRepository;
 
     private final CacheManager cacheManager;
+    private final CaptchaService captchaService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager, CaptchaService captchaService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.captchaService = captchaService;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -88,6 +90,13 @@ public class UserService {
     }
 
     public User registerUser(UserDTO userDTO, String password) {
+         boolean captchaVerified = captchaService.verify(userDTO.getRecaptchaResponse().toString());
+        if(!captchaVerified){
+            System.out.println("Deveria dar error");
+            throw new EmailAlreadyUsedException();
+        } else {
+            System.out.println("PORRRRRRRRRRAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
         userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
