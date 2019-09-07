@@ -19,6 +19,11 @@
                 <strong>Email is already in use!</strong> Please choose another one.
             </div>
 
+            <div class="alert alert-danger" *ngIf="errorCaptchaExists">
+                <strong>Captcha invalid </strong> please reload the page and try again
+            </div>
+
+
             <div class="alert alert-danger" *ngIf="doNotMatch">
                 The password and its confirmation do not match!
             </div>

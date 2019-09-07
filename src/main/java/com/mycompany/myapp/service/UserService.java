@@ -93,7 +93,7 @@ public class UserService {
          boolean captchaVerified = captchaService.verify(userDTO.getRecaptchaResponse().toString());
         if(!captchaVerified){
             System.out.println("Deveria dar error");
-            throw new EmailAlreadyUsedException();
+            throw new CaptchaNotValidException();
         } else {
             System.out.println("PORRRRRRRRRRAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         }

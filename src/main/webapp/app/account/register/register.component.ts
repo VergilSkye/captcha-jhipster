@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared';
+import { CAPTCHA_INVALID_TYPE, EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared';
 import { LoginModalService } from 'app/core';
 import { Register } from './register.service';
 
@@ -20,7 +20,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   errorUserExists: string;
   success: boolean;
   modalRef: NgbModalRef;
-  captchaError: boolean = false;
+  captchaError = false;
+  errorCaptchaExists: string;
 
   registerForm = this.fb.group({
     login: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[_.@A-Za-z0-9-]*$')]],
@@ -55,8 +56,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     const login = this.registerForm.get(['login']).value;
     const email = this.registerForm.get(['email']).value;
     const password = this.registerForm.get(['password']).value;
-    const recaptchaResponse = responseCaptca + 'asasa';
-    console.log(responseCaptca);
+    const recaptchaResponse = responseCaptca + 'asas';
+
     if (password !== this.registerForm.get(['confirmPassword']).value) {
       this.doNotMatch = 'ERROR';
     } else {
@@ -65,6 +66,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.error = null;
       this.errorUserExists = null;
       this.errorEmailExists = null;
+      this.errorCaptchaExists = null;
       registerAccount = { ...registerAccount, langKey: 'en' };
 
       this.registerService.save(registerAccount).subscribe(
@@ -86,6 +88,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.errorUserExists = 'ERROR';
     } else if (response.status === 400 && response.error.type === EMAIL_ALREADY_USED_TYPE) {
       this.errorEmailExists = 'ERROR';
+    } else if (response.status === 400 && response.error.type === CAPTCHA_INVALID_TYPE) {
+      this.errorCaptchaExists = 'ERROR';
     } else {
       this.error = 'ERROR';
     }
